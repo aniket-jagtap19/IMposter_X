@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently -n web,server -c cyan,magenta \"npm run dev:web\" \"npm run dev:server\"",
+    "dev:web": "next dev",
     "dev:server": "node server/index.js",
     "build": "next build",
     "start": "next start",
@@ -23,6 +24,7 @@
     "zustand": "^5.0.13"
   },
   "devDependencies": {
+    "concurrently": "^9.2.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
