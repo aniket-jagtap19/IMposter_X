@@ -1,0 +1,9 @@
+Use strict TypeScript.
+Keep components modular.
+Never generate massive files.
+Prefer reusable hooks.
+Mobile-first UI always.
+Use Tailwind only.
+Keep websocket logic isolated.
+Avoid unnecessary abstraction.
+Prioritize readability over cleverness.
