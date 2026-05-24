@@ -1,5 +1,6 @@
 import type {
   CreateRoomInput,
+  GamePhase,
   JoinRoomInput,
   Player,
   PlayerGameView,
@@ -12,6 +13,12 @@ export const SOCKET_EVENTS = {
   ROOM_UPDATED: "room:updated",
   PLAYER_CONNECTED: "player:connected",
   PLAYER_DISCONNECTED: "player:disconnected",
+  START_GAME: "game:start",
+  GAME_UPDATED: "game:updated",
+  PHASE_CHANGED: "phase:changed",
+  TIMER_UPDATED: "timer:updated",
+  SUBMIT_VOTE: "vote:submit",
+  ROUND_STARTED: "round:started",
   ERROR: "game:error",
 } as const;
 
@@ -29,6 +36,28 @@ export interface PlayerDisconnectedPayload {
   playerId: string;
 }
 
+export interface SubmitVoteInput {
+  targetPlayerId: string;
+}
+
+export interface PhaseChangedPayload {
+  roomCode: string;
+  phase: GamePhase;
+  roundNumber: number | null;
+}
+
+export interface TimerUpdatedPayload {
+  roomCode: string;
+  discussionEndTime: number | null;
+  votingEndTime: number | null;
+}
+
+export interface RoundStartedPayload {
+  roomCode: string;
+  roundNumber: number;
+  category: string;
+}
+
 export interface ClientToServerEvents {
   [SOCKET_EVENTS.CREATE_ROOM]: (
     payload: CreateRoomInput,
@@ -38,10 +67,21 @@ export interface ClientToServerEvents {
     payload: JoinRoomInput,
     ack: (res: AckResponse) => void,
   ) => void;
+  [SOCKET_EVENTS.START_GAME]: (
+    ack: (res: AckResponse) => void,
+  ) => void;
+  [SOCKET_EVENTS.SUBMIT_VOTE]: (
+    payload: SubmitVoteInput,
+    ack: (res: AckResponse) => void,
+  ) => void;
 }
 
 export interface ServerToClientEvents {
   [SOCKET_EVENTS.ROOM_UPDATED]: (view: PlayerGameView) => void;
+  [SOCKET_EVENTS.GAME_UPDATED]: (view: PlayerGameView) => void;
+  [SOCKET_EVENTS.PHASE_CHANGED]: (payload: PhaseChangedPayload) => void;
+  [SOCKET_EVENTS.TIMER_UPDATED]: (payload: TimerUpdatedPayload) => void;
+  [SOCKET_EVENTS.ROUND_STARTED]: (payload: RoundStartedPayload) => void;
   [SOCKET_EVENTS.PLAYER_CONNECTED]: (player: Player) => void;
   [SOCKET_EVENTS.PLAYER_DISCONNECTED]: (
     payload: PlayerDisconnectedPayload,
