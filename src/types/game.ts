@@ -4,15 +4,28 @@ export const MIN_PLAYERS = 4;
 
 export enum GamePhase {
   Lobby = "lobby",
-  Clues = "clues",
+  RoleReveal = "role-reveal",
   Discussion = "discussion",
   Voting = "voting",
   Reveal = "reveal",
-  RoundEnd = "round-end",
-  GameOver = "game-over",
+  Scoreboard = "scoreboard",
 }
 
 export type PlayerRole = "imposter" | "crew";
+
+/** voterPlayerId → targetPlayerId */
+export type VoteMap = Record<string, string>;
+
+export interface RoundState {
+  roundNumber: number;
+  topic: string;
+  category: string;
+  imposterId: string | null;
+  discussionEndTime: number | null;
+  votingEndTime: number | null;
+  revealedPlayerId: string | null;
+  votes: VoteMap;
+}
 
 export interface Player {
   /** Stable identity across reconnects within a session. */
@@ -34,18 +47,18 @@ export interface Room {
   players: Player[];
   maxPlayers: number;
   hostPlayerId: string;
-  round: number;
   maxRounds: number;
-  phaseEndsAt: number | null;
-  imposterPlayerId: string | null;
-  eliminatedPlayerId: string | null;
+  currentRound: RoundState | null;
 }
 
 /** Per-player room snapshot from server (role/topic visibility). */
 export interface PlayerGameView extends Room {
   playerId: string;
   role: PlayerRole | null;
+  /** Hidden from imposter during active phases. */
   topic: string | null;
+  /** Category hint visible to all players. */
+  category: string | null;
 }
 
 export interface CreateRoomInput {
