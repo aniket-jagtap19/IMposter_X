@@ -1,5 +1,11 @@
-import { ConnectionTest } from "@/components/connection-test";
+import { DebugPanel } from "@/components/DebugPanel";
+import { RoomLobby } from "@/components/RoomLobby";
 
 export default function Home() {
-  return <ConnectionTest />;
+  return (
+    <>
+      <RoomLobby />
+      <DebugPanel />
+    </>
+  );
 }

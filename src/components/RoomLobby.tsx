@@ -25,6 +25,16 @@ export function RoomLobby() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const connectNow = useCallback(() => {
+    if (socket.connected) return;
+    setError(null);
+    socket.connect();
+  }, []);
+
+  const disconnectNow = useCallback(() => {
+    socket.disconnect();
+  }, []);
+
   useEffect(() => {
     const onConnect = () => setConnected(true);
     const onDisconnect = () => {
@@ -47,7 +57,11 @@ export function RoomLobby() {
     socket.on(SOCKET_EVENTS.ERROR, onError);
     socket.on("connect_error", (e) => onError(e.message));
 
-    if (socket.connected) setConnected(true);
+    if (socket.connected) {
+      setConnected(true);
+    } else {
+      connectNow();
+    }
 
     return () => {
       socket.off("connect", onConnect);
@@ -56,20 +70,10 @@ export function RoomLobby() {
       socket.off(SOCKET_EVENTS.ERROR, onError);
       socket.off("connect_error");
     };
-  }, [resetGame, setConnected, setRoom]);
+  }, [connectNow, resetGame, setConnected, setRoom]);
 
   const players = currentRoom?.players ?? [];
   const hostId = currentRoom?.hostPlayerId ?? null;
-
-  const connectNow = useCallback(() => {
-    if (socket.connected) return;
-    setError(null);
-    socket.connect();
-  }, []);
-
-  const disconnectNow = useCallback(() => {
-    socket.disconnect();
-  }, []);
 
   const canSubmit = useMemo(() => {
     const nameOk = playerName.trim().length > 0 && playerName.trim().length <= 20;
