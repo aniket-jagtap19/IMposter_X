@@ -34,11 +34,8 @@ function createRoomState(roomCode, hostPlayer, maxPlayers) {
     players: [hostPlayer],
     maxPlayers,
     hostPlayerId: hostPlayer.playerId,
-    round: 0,
     maxRounds: 5,
-    phaseEndsAt: null,
-    imposterPlayerId: null,
-    eliminatedPlayerId: null,
+    currentRound: null,
   };
 }
 
@@ -116,18 +113,19 @@ class RoomManager {
     if (!found) return null;
 
     const { room, player } = found;
+    const roomCode = room.roomCode;
     room.players = room.players.filter((p) => p.socketId !== socketId);
 
     if (room.players.length === 0) {
-      this.rooms.delete(room.roomCode);
-      return { room: null, removedPlayer: player };
+      this.rooms.delete(roomCode);
+      return { room: null, removedPlayer: player, roomCode };
     }
 
     if (room.hostPlayerId === player.playerId) {
       assignHost(room);
     }
 
-    return { room, removedPlayer: player };
+    return { room, removedPlayer: player, roomCode };
   }
 
   /**
