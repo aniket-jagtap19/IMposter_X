@@ -53,3 +53,5 @@ Main priorities:
 4. Fast gameplay feel
 5. Reliable synchronization
 6. Contest-quality presentation
+
+<!-- Project by Aniket Jagtap,  time: - 2026-08-28 22:59:12 -->
