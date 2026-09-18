@@ -51,3 +51,5 @@ export const useGameStore = create<GameState>((set) => ({
   setConnected: (connected) => set({ connected }),
   resetGame: () => set({ ...initialState, timer: { ...initialTimer } }),
 }));
+
+// Project by Aniket Jagtap, time: - 2026-09-19 03:01:46
