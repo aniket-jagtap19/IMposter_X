@@ -5,3 +5,5 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
+// Project by Aniket Jagtap, time: - 2026-09-27 03:04:23
